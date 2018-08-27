@@ -1,0 +1,137 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ include file="../public.jsp"%>
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>栏目首页</title>
+
+    <link href="../css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <link href="../css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../css/animate.min.css" rel="stylesheet">
+    <link href="../css/style.min.css?v=4.0.0" rel="stylesheet">
+
+</head>
+
+<body>
+        <!-- Panel Other -->
+        <div class="ibox">
+            <div class="ibox-content">
+                <div class="row row-lg">
+                    <div class="col-sm-12">
+                        <h2 >一级栏目</h2>
+                        <hr>
+                        <c:if test="${!empty notify}">
+                        	<div class="alert alert-success">
+                                ${notify}
+                            </div>
+                        </c:if>
+                        <div>
+                        	
+                        </div>
+                        <div>
+                            <div class="btn-group hidden-xs" id="toolbar">
+                                <button type="button" class="btn btn-outline btn-default" onclick="window.location.href='../programa/edit.do'">
+                                    <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+                                    <span>添加栏目</span>
+                                </button>
+                            </div>
+                            <table id="table1" data-height="500" data-mobile-responsive="true"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Panel Other -->
+    
+    <script src="../js/jquery.min.js?v=2.1.4"></script>
+    <script src="../js/bootstrap.min.js?v=3.3.5"></script>
+    <script src="../js/content.min.js?v=1.0.0"></script>
+    <script src="../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <%--<script src="../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+    --%><script src="../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script>
+        $(function(){
+            $('#table1').bootstrapTable({
+            	method: 'get',
+            	url: "../programa/ajaxListMainPrograma.do",
+				striped : true,
+				cache: false,
+				pagination : true,
+				sidePagination : "server",
+				pageNumber:1,      //初始化加载第一页，默认第一页
+                pageSize: 10,
+                toolbar : "#toolbar",
+                showColumns: true, // 开启自定义列显示功能
+                showRefresh: true, // 开启刷新功能
+                pageList: [10, 25, 50, 100],
+                queryParamsType:'',
+				columns: [{
+					field: 'name',
+					title: '栏目名称',
+					width: "20%",
+				}, {
+					field: 'status',
+					title: '状态',
+					formatter : 
+						function(value, row, index) {
+							if (row.status == 'online') {
+								return ["上线"].join('');
+							} else {
+								return ["<span style='color:red'>下线</span>"].join('');
+							}
+						}
+				}, {
+					field: 'url',
+					title: '跳转地址',
+					width: "30%",
+				}, {
+					field: 'operate',
+					title: '操作',
+					width: "40%",
+					align: "center",
+					events: operateEvents,
+					formatter: operateFormatter
+				}, ]
+			});
+        });
+        
+        function operateFormatter(value, row, index) {
+        	if (row.id == "0") {
+        		return [
+	                '<button type="button" title="查看二级栏目" class="second_programa btn btn-white btn-sm" style="margin-right:15px;"><i class="fa fa-bars"/></button>',
+	            ].join('');
+        	} else {
+        		 return [
+	                '<button type="button" title="查看二级栏目" class="second_programa btn btn-white btn-sm" style="margin-right:15px;"><i class="fa fa-bars"/></button>',
+	                '<button type="button" title="查看关联节目" class="list_item btn btn-white btn-sm" style="margin-right:20px;"><i class="fa fa-film"/></button>',
+	                '<button type="button" title="编辑" class="edit btn btn-white btn-sm" style="margin-right:15px;"><i class="fa fa-pencil"/></button>',
+	            ].join('');
+        	}
+        }
+        
+        var operateEvents = {
+            'click .second_programa': function (e, value, row, index) {
+		    	window.location.href="../programa/secondPrograma.do?id=" + row.id + "&name=" + row.name;
+		    	
+		    },
+		    'click .list_item': function (e, value, row, index) {
+		    	window.location.href="../programa/listItem.do?id=" + row.id + "&name=" + row.name;
+		    },
+		    'click .edit': function (e, value, row, index) {
+				window.location.href="../programa/edit.do?id=" + row.id;
+		    },
+        };
+        
+        
+    </script>
+
+</body>
+
+</html>

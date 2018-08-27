@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace和定义的Mapper接口对应，并实现其中的方法 -->
+<mapper namespace="com.admin.dao.VideoDao">
+    <select id="listVideo" resultMap="videoMap">
+    	select v.* from t_video v left join t_item i on v.video_item_id=i.item_id where 1=1
+    	<if test="'' != name">
+    		and (video_name like CONCAT('%',#{name},'%') or item_name like CONCAT('%',#{name},'%'))
+    	</if>
+    	<if test="'' != status">
+    		and video_status=#{status}
+    	</if>
+    	order by video_onlineTime desc,video_item_id desc,video_episode desc
+    </select>
+    
+    <select id="getVideoById" parameterType="String" resultMap="videoMap">
+		select * from t_video v 
+		inner join t_video_children vc 
+		on 
+			v.video_id=vc.video_id 
+		where 
+			v.video_id=#{id}  
+    </select>
+    
+    <update id="updateVideo" parameterType="video">
+    	update t_video v inner join t_video_children vc 
+    	on 
+    		v.video_id=vc.video_id 
+    	set 
+    		video_name=#{name},video_charge=#{charge},video_status=#{status},
+    		video_onlineTime=#{onlineTime},video_offlineTime=#{offlineTime},
+    		video_url=#{videoChildren.playUrl},video_episode=#{episode},video_period=#{period},
+    		fileUrl=#{videoChildren.fileUrl},vc.playUrl=#{videoChildren.playUrl} 
+    	where 
+    		v.video_id=#{id}
+    </update>
+    
+    <update id="updateVideoStatus">
+    	update t_video set video_status=#{status} where video_id=#{id}
+    </update>
+    
+   	<resultMap type="video" id="videoMap">
+   		<id property="id" column="video_id"/>
+        <result property="name" column="video_name"/>
+        <result property="onlineTime" column="video_onlineTime"/>
+        <result property="offlineTime" column="video_offlineTime"/>
+        <result property="charge" column="video_charge"/>
+        <result property="status" column="video_status"/>
+        <result property="url" column="video_url"/>
+        <result property="episode" column="video_episode"/>
+        <result property="period" column="video_period"/>
+        <result property="itemId" column="video_item_id"/>
+        <association property="videoChildren" javaType="videoChildren" resultMap="videoChildrenMap"/>
+        	
+   	</resultMap>
+   	
+   	<resultMap type="videoChildren" id="videoChildrenMap">
+   		<id property="id" column="fileId"/>
+   		<id property="name" column="fileName"/>
+        <result property="playUrl" column="playUrl"/>
+        <result property="fileUrl" column="fileUrl"/>
+        <result property="status" column="status"/>
+        <result property="rate" column="rate"/>
+        <result property="md5" column="md5"/>
+        <result property="videoId" column="video_id"/>
+        <result property="createTime" column="create_time"/>
+   	</resultMap>
+</mapper>

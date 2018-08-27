@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace和定义的Mapper接口对应，并实现其中的方法 -->
+<mapper namespace="me.maoburu.dao.ItemDao">
+    
+    <select id="listItem" resultMap="itemMap">
+		select * from t_item where 1=1
+		<if test="name != ''">
+			and item_name like CONCAT('%',#{name},'%')
+		</if>
+		<if test="status != ''">
+			and item_status=#{status}
+		</if>
+		<if test="charge != ''">
+			and item_charge=#{charge}
+		</if>
+		<if test="type != ''">
+			and item_type=#{type}
+		</if>
+		order by item_onlineTime desc
+    </select>
+    
+    <select id="getItemById" parameterType="String" resultMap="itemMap">
+    	select * from t_item where item_id=#{id}
+    </select>
+    
+    <select id="ajaxListRelateVideo" resultMap="me.maoburu.dao.VideoDao.videoMap">
+    	select * from t_video where video_item_id=#{id} 
+    	<if test="name != null and '' !=status">
+    		and video_name like CONCAT('%',#{name},'%') 
+    	</if>
+    	<if test="status != null and '' !=status">
+    		and video_status =#{status} 
+    	</if>
+    	order by video_episode asc
+    </select>
+    
+    <insert id="addItem" parameterType="item">
+    	insert t_item
+	    	(item_id,item_name,item_keyword,item_onlineTime,item_offlineTime,item_charge,item_status,item_memo,
+	    	item_update,item_area,item_type,item_director,item_guest,item_poster,item_fileCount,item_year,item_language,item_corner)
+    	value
+	    	(#{id},#{name},#{keyword},#{onlineTime},#{offlineTime},#{charge},#{status},#{memo},
+	    	#{update},#{area},#{type},#{director},#{guest},#{poster},#{fileCount},#{year},#{language},#{corner})
+    </insert>
+    
+    <update id="updateItem" parameterType="item">
+    	update
+    		t_item
+    	set
+    		item_name=#{name},item_keyword=#{keyword},item_onlineTime=#{onlineTime},
+    		item_offlineTime=#{offlineTime},item_charge=#{charge},item_status=#{status},item_memo=#{memo},
+	    	item_update=#{update},item_area=#{area},item_type=#{type},item_director=#{director},
+	    	item_guest=#{guest},item_poster=#{poster},item_fileCount=#{fileCount},item_year=#{year},
+	    	item_language=#{language},item_corner=#{corner}
+	    where
+	    	item_id=#{id}
+    </update>
+    
+    <select id="listUnrelateVideo" resultMap="me.maoburu.dao.VideoDao.videoMap">
+    	select * from t_video 
+    	where 
+    		video_item_id not in (select item_id from t_item) 
+    	<if test="name != null and '' != name">
+    		and video_name like CONCAT('%',#{name},'%') 
+    	</if>
+    </select>
+    
+    <update id="relateVideo">
+    	update t_video set video_item_id=#{parentId} where video_id=#{id}
+    </update>
+    
+    <select id="getMaxPosition" resultType="int">
+    	select count(0) from t_video where video_item_id=#{parentId}
+    </select>
+    
+    <update id="setItemPosition">
+    	update t_video set video_episode=#{updatePosition} where video_item_id=#{parentId} and video_episode=#{position}
+    	<if test="id != null">
+    	and video_id=#{id}
+    	</if>
+    </update>
+    
+    <update id="removeRelateVideo">
+    	update t_video set video_item_id='' where video_id=#{id}
+    </update>
+    
+    <update id="updateItemStatus">
+    	update t_item set item_status=#{status} where item_id=#{id}
+    </update>
+    
+    <update id="updateItemCharge">
+    	update t_item set item_charge=#{charge} where item_id=#{id}
+    </update>
+    
+    <update id="updatePoster">
+    	update t_item set item_poster=#{poster} where item_id=#{id}
+    </update>
+   	
+   	<resultMap type="item" id="itemMap">
+    	<id property="id" column="item_id"/>
+        <result property="name" column="item_name"/>
+        <result property="keyword" column="item_keyword"/>
+        <result property="onlineTime" column="item_onlineTime"/>
+        <result property="offlineTime" column="item_offlineTime"/>
+        <result property="charge" column="item_charge"/>
+        <result property="status" column="item_status"/>
+        <result property="memo" column="item_memo"/>
+        <result property="update" column="item_update"/>
+        <result property="area" column="item_area"/>
+        <result property="type" column="item_type"/>
+        <result property="guest" column="item_guest"/>
+        <result property="poster" column="item_poster"/>
+        <result property="fileCount" column="item_fileCount"/>
+        <result property="finishStatus" column="item_finish_status"/>
+        <result property="director" column="item_director"/>
+        <result property="year" column="item_year"/>
+        <result property="language" column="item_language"/>
+        <result property="viewPoint" column="item_viewPoint"/>
+        <result property="category" column="item_category"/>
+        <result property="score" column="item_score"/>
+        <result property="like" column="item_like"/>
+        <result property="updateTime" column="item_updatetime"/>
+        <result property="corner" column="item_corner"/>
+        <result property="pointPerson" column="item_pointPerson"/>
+        <result property="position" column="position"/>
+        <result property="behavior" column="behavior"/>
+    </resultMap>
+</mapper>

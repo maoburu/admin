@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace和定义的Mapper接口对应，并实现其中的方法 -->
+<mapper namespace="me.maoburu.dao.ProgramaDao">
+    
+    <select id="listPrograma" parameterType="String" resultMap="programaMap">
+    	select p.*,r.position from t_programa p 
+    	inner join t_relate r 
+    	on p.programa_id=r.minor_id 
+    	where r.main_id=#{id} and mark_id='0' order by r.position
+    </select>
+    
+    <select id="list" resultMap="programaMap">
+    	select * from t_programa where programa_id!='0'
+    </select>
+    
+    <select id="listMainPrograma" resultMap="programaMap">
+    	select p.*,r.position from t_programa p
+    	left join t_relate r on programa_id=minor_id 
+    	where main_id='0' and mark_id='0' or programa_id='0'
+    </select> 
+    
+    
+    <select id="listRelateItem" resultMap="me.maoburu.dao.ItemDao.itemMap">
+    	select i.*,r.position,r.behavior from t_item i 
+    	inner join t_relate r 
+    	on i.item_id=r.minor_id 
+    	where r.main_id=#{id} and mark_id='1'
+    	<if test="name != null">
+    		and item_name like CONCAT('%',#{name},'%') 
+    	</if>
+    	<if test="status != null and '' !=status">
+    		and item_status=#{status}
+    	</if>
+    	 order by position
+    </select>
+    
+    <select id="getProgramabyId" parameterType="String" resultMap="programaMap">
+    	select * from t_programa where programa_id=#{id}
+    </select>
+    
+    <insert id="addPrograma" parameterType="programa">
+    	insert t_programa (programa_id, programa_name, programa_onlineTime, programa_offlineTime,
+    		programa_status, programa_url, programa_memo, programa_background)
+    	value (#{id}, #{name}, #{onlineTime}, #{offlineTime}, #{status}, #{url}, #{memo}, #{background})
+    </insert>
+    
+    <insert id="addRelatePrograma" parameterType="Map">
+    	insert t_relate (relate_id,main_id,minor_id,mark_id,position,relate_addTime)
+    	value (#{id},#{mainId},#{minorId},#{markId},#{position},#{addTime})
+    </insert>
+    
+    <select id="getProgramaList" resultMap="programaMap">
+    	select programa_id, programa_name from t_programa left join t_relate on programa_id=minor_id where main_id='0' and mark_id='0' or programa_id='0'  
+    </select>
+    
+    <update id="updatePrograma" parameterType="programa">
+    	update t_programa set programa_name=#{name}, programa_onlineTime=#{onlineTime},
+    		programa_offlineTime=#{offlineTime},programa_status=#{status},programa_url=#{url},
+    		programa_memo=#{memo},programa_background=#{background} where programa_id=#{id}
+    </update>
+    
+    <update id="updateRelatePrograma" parameterType="Map">
+    	update t_relate set main_id=#{mainId} where minor_id=#{minorId} and mark_id='0'
+    </update>
+    
+   	<select id="checkRelatePrograma" resultType="int">
+    	select count(0) from t_relate where main_id=#{parentId} and minor_id=#{id} and mark_id='0'
+    </select>
+    
+    <insert id="relatePrograma">
+    	insert t_relate (main_id,minor_id,mark_id,position,relate_AddTime)
+    	value (#{parentId},#{id},'0',#{position},NOW())
+    </insert>
+    
+    <select id="getMaxPosition" resultType="int">
+    	select count(0) from t_relate where main_id=#{parentId} and mark_id=#{markId}
+    </select>
+    
+     <select id="listItem" resultMap="me.maoburu.dao.ItemDao.itemMap">
+    	select * from t_item
+    	<if test="name != null">
+    		where item_name like CONCAT('%',#{name},'%') 
+    	</if>
+    </select>
+    
+    <select id="checkRelateItem" resultType="int">
+    	select count(0) from t_relate where main_id=#{parentId} and minor_id=#{id} and mark_id='1'
+    </select>
+    
+    <insert id="relateItem" >
+    	insert t_relate (main_id,minor_id,mark_id,position,relate_AddTime)
+    	value (#{parentId},#{id},'1',#{position},NOW())
+    </insert>
+    
+    <update id="setProgramaPosition">
+    	update t_relate set position=#{updatePosition} where main_id=#{parentId} and mark_id='0' and position=#{position}
+    	<if test="id != null">
+    		and minor_id=#{id}
+    	</if> 
+    </update>
+	
+	<delete id="removeRelate">
+		delete from t_relate where main_id=#{parentId} and minor_id=#{id} and mark_id=#{markId}
+	</delete>
+	
+	<update id="updateOtherPosition">
+		update t_relate 
+		set 
+			position = position-1 
+		where 
+			main_id=#{parentId} and mark_id=#{markId} and position>#{position}
+	</update>
+	
+	<update id="setItemPosition">
+		update t_relate set position=#{updatePosition} where main_id=#{parentId} and mark_id='1' and position=#{position}
+    	<if test="id != null">
+    		and minor_id=#{id}
+    	</if>
+	</update>
+	
+	<select id="getItemById" resultType="map">
+		select showImage, focusImage, posterImage from t_relate 
+		where main_id=#{parentId} and minor_id=#{id} and mark_id='1'
+	</select>
+	
+	<update id="updateRelatePoster">
+		update t_relate set 
+		<if test="'showImage' == type">
+			showImage=#{poster}
+		</if>
+		<if test="'focusImage' == type">
+			focusImage=#{poster}
+		</if>
+		<if test="'posterImage' == type">
+			posterImage=#{poster}
+		</if>
+		 where main_id=#{parentId} and minor_id=#{id} and mark_id='1'
+	</update>
+	   
+    <resultMap type="programa" id="programaMap">
+    	<id property="id" column="programa_id"/>
+        <result property="name" column="programa_name"/>
+        <result property="onlineTime" column="programa_onlineTime"/>
+        <result property="offlineTime" column="programa_offlineTime"/>
+        <result property="status" column="programa_status"/>
+        <result property="url" column="programa_url"/>
+        <result property="memo" column="programa_memo"/>
+        <result property="background" column="programa_background"/>
+        <result property="position" column="position"/>
+    </resultMap>
+    
+</mapper>

@@ -1,0 +1,166 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ include file="../public.jsp"%>
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>节目关联</title>
+
+    <link href="../css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <link href="../css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../css/animate.min.css" rel="stylesheet">
+    <link href="../css/style.min.css?v=4.0.0" rel="stylesheet">
+
+</head>
+
+<body>
+    <!-- Panel Other -->
+    <div class="ibox">
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                	<form role="form" class="form-inline">
+                        <div class="form-group" class="col-sm-3">
+                            <input type="text" placeholder="输入视频名" id="name" name="name" class="form-control">
+                        </div>
+                        <button class="btn btn-primary" id="searchBtn" style="margin-left: 30px">查询</button>
+                    </form>
+                    <div class="btn-group hidden-xs" id="toolbar">
+                        <button id="relateButton" type="button" class="btn btn-outline btn-default">
+                            <i class="fa fa-link" aria-hidden="true"></i>
+                            <span>关联选中</span>
+                        </button>
+                    </div>
+                    <table id="table1" data-height="330" data-mobile-responsive="true"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Panel Other -->
+    
+    <script src="../js/jquery.min.js?v=2.1.4"></script>
+    <script src="../js/bootstrap.min.js?v=3.3.5"></script>
+    <script src="../js/content.min.js?v=1.0.0"></script>
+    <script src="../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <%--<script src="../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+    --%><script src="../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../js/plugins/layer/layer.js"></script>
+    <script>
+        $(function(){
+            $('#table1').bootstrapTable({
+            	method: 'get',
+            	url: "../item/ajaxListVideo.do",
+				striped : true,
+				cache: false,
+				pagination : true,
+				sidePagination : "server",
+				pageNumber:1,      //初始化加载第一页，默认第一页
+                pageSize: 10,
+                toolbar : "#toolbar",
+                pageList: [10, 25, 50, 100],
+                queryParamsType:'',
+                queryParams: function (params) {  
+			        params.name = $('input[name="name"]').val();
+			        //特别说明，返回的参数的值为空，则当前参数不会发送到服务器端  
+			        //这种指定请求参数的方式和datatables控价类似  
+			        return params;  
+			    },
+				columns: [{
+					checkbox: true,
+					width: "5%",
+				},{
+					field: 'name',
+					title: '视频名称',
+					width: "20%",
+				}, {
+					field: 'status',
+					title: '状态',
+                    width: "10%",
+                    formatter : 
+                    	function(value, row, index) {
+							if (row.status == 'online') {
+								return ["上线"].join('');
+							} else {
+								return ["<span style='color:red'>下线</span>"].join('');
+							}
+						}
+				}, {
+					field: 'operate',
+					title: '操作',
+					width: "35%",
+					align: "center",
+					events: operateEvents,
+					formatter: operateFormatter
+				}, ]
+			});
+        });
+        
+        function operateFormatter(value, row, index) {
+            return [
+               '<button type="button" class="relate btn btn-primary btn-sm" style="margin-right:15px;">视频关联</button>',
+            ].join('');
+        }
+        
+        var operateEvents = {
+		    'click .relate': function (e, value, row, index) {
+		    	$.ajax({
+			        type: 'post',
+			        dataType:"json",
+			        data: {
+		          		id : row.id,
+		          		parentId: "${parentId}",
+			        },
+			        url: '../item/ajaxRelateVideo.do',
+			        success: function (data) {
+			        	if (data != -1) {
+			        		layer.msg("关联成功");
+			        	} else {
+			        		layer.msg("关联失败，重复关联");
+			        	}
+			        }
+		  		});
+		    },
+        };
+        
+        $("#relateButton").on("click", function(){
+        	var rows = $("#table1").bootstrapTable('getSelections');
+        	if (rows != '' && rows != null) {
+        		var ids = [];
+	        	$.each(rows,function(i, row){
+					ids[i] = row.id;
+	        	});
+	        	$.ajax({
+			        type: 'post',
+			        data: {
+		          		idList : ids,
+		          		parentId: "${parentId}",
+			        },
+			        url: '../item/ajaxRelateVideoList.do',
+			        success: function (result) {
+			        	if (result != -1) {
+			        		
+			        		layer.msg("关联成功");
+			        	} else {
+			        		layer.msg("关联失败，重复关联");
+			        	}
+			        }
+	  			});
+        	} else {
+        		layer.msg("请至少选择一项");
+        	}
+        });
+        
+        $("#searchBtn").on("click", function(e){
+        	e.preventDefault();
+        	$('#table1').bootstrapTable("refresh");
+        });
+    </script>
+
+</body>
+
+</html>

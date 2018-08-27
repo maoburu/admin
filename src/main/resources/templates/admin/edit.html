@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+
+    <title>用户编辑</title>
+
+    <link href="/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <link href="/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="/css/animate.min.css" rel="stylesheet">
+    <link href="/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+    <link href="/css/style.min.css?v=4.0.0" rel="stylesheet">
+
+</head>
+
+<body>
+    <div class="ibox">
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <!-- Example Events -->
+                    <div class="example-wrap">
+                        <h2>用户编辑</h2>
+                        <hr>
+                    </div>
+                    <form class="form-horizontal m-t" id="form" action="/admin/addOrUpdateAdminTrue.do" method="post">
+                       <input type="hidden" name="id" value="${adminInfo.id}">
+                       <input type="hidden" name="operation" value="${operation}">
+                       <div class="form-group">
+                           <label class="col-sm-2 control-label">登录名 *：</label>
+                           <div class="col-sm-4">
+                               <input name="name" placeholder="请输入大于4-10位数字与字母组合" class="form-control valid" type="text" th:text="${adminInfo?.name}" >
+                           </div>
+                       </div>
+                       <div class="form-group">
+                           <label class="col-sm-2 control-label">姓名 *：</label>
+                           <div class="col-sm-4">
+                               <input name="realName" placeholder="请输入真实姓名" class="form-control valid" type="text" th:text="${adminInfo?.realName}" aria-required="true" aria-invalid="false">
+                           </div>
+                       </div>
+                       <div class="form-group">
+                           <label class="col-sm-2 control-label">联系方式 *：</label>
+                           <div class="col-sm-4">
+                               <input name="phone" placeholder="请输入真实手机号码" class="form-control valid" type="text" th:text="${adminInfo?.phone}" aria-required="true" aria-invalid="true">
+                           </div>
+                       </div>
+                       <div class="form-group">
+                       		<label class="col-sm-2 control-label">权限 *：</label>
+                       		<div class="col-sm-5">
+                       			<div class="radio radio-info radio-inline">
+                                    <input id="role1" type="radio" value="1" name="role" th:if="${adminInfo?.role == 1}" th:attr="checked=checked"/>
+                                    <label for="role1"> 管理员 </label>
+                                </div>
+                                <div class="radio radio-info radio-inline">
+                                    <input id="role2" type="radio" value="2" name="role" th:if="${adminInfo?.role != 1}" th:attr="checked=checked"/>
+                                    <label for="role2"> 运营 </label>
+                                </div>
+                       		</div>
+                       </div>
+                       <div class="form-group">
+                       		<label class="col-sm-2 control-label">状态 *：</label>
+                       		<div class="col-sm-5">
+                       			<div class="radio radio-info radio-inline">
+                                    <input id="status1" type="radio" value="0" name="valid" th:if="${adminInfo?.valid == 0}" th:attr="checked=checked">
+                                    <label for="status1"> 锁定 </label>
+                                </div>
+                                <div class="radio radio-info radio-inline">
+                                    <input id="status2" type="radio" value="1" name="valid" th:if="${adminInfo?.valid != 0}" th:attr="checked=checked">
+                                    <label for="status2"> 正常 </label>
+                                </div>
+                       		</div>
+                       </div>
+                       <div class="form-group">
+                           <label class="col-sm-2 control-label">描述：</label>
+                           <div class="col-sm-4">
+                               <textarea id="desc" name="desc" class="form-control" placeholder="可选" rows="3" th:if="${adminInfo?.desc != 0}" th:value="${adminInfo?.desc}"></textarea>
+                           </div>
+                       </div>
+                       <div class="form-group">
+                           <div class="col-sm-5 col-sm-offset-3">
+                               <button class="btn btn-primary" type="submit" style="margin-right:15px">保存</button>
+                               <button class="btn btn-white" onclick="window.history.go(-1)">取消</button>
+                           </div>
+                       </div>
+                   </form>
+                    <!-- End Example Events -->
+                </div>
+            </div>
+        </div>
+    </div>
+            
+    <script src="/js/jquery.min.js?v=2.1.4"></script>
+    <script src="/js/bootstrap.min.js?v=3.3.5"></script>
+    <script src="/js/plugins/validate/jquery.validate.min.js"></script>
+    <script src="/js/plugins/validate/messages_zh.min.js"></script>
+   	<script>
+		jQuery.validator.addMethod("isPhone", function(value, element) {
+			var length = value.length;
+			var regPhone = /^1([3578]\d|4[57])\d{8}$/;
+			return this.optional(element) || (length == 11 && regPhone.test(value));
+		}, "请正确填写您的手机号码");
+		
+		$(function() {			
+   	 		$("#form").validate({
+   	 			rules: {
+   	 				name: {
+   	 					required: true,
+   	 					rangelength: [2,10],
+   	 				},
+   	 				realName: {
+   	 					required: true,
+   	 					rangelength: [2,10],
+   	 				},
+   	 				phone: {
+   	 					required: true,
+   	 					isPhone: true,
+   	 				},
+  	 			},
+  	 			messages: {
+  	 				name: {
+						required:"请输入登录名",
+						rangelength:"用户名长度在2-10字符范围内"
+  	 				},
+  	 				realName: {
+						required:"请输入真实姓名",
+						rangelength:"真实姓名长度在2-10字符范围内"
+  	 				},
+   	 				phone: {
+   	 					required: "请输入手机号",
+   	 				},
+  	 			}
+   	 		});
+		});
+	</script>
+</body>
+
+</html>
