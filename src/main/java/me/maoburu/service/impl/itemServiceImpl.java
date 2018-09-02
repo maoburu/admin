@@ -35,6 +35,7 @@ public class itemServiceImpl implements ItemService {
 		Long total = new PageInfo(itemList).getTotal();
 		Page page = new Page();
 		page.setRows(itemList);
+		page.setTotal(total);
 		return page;
 	}
 

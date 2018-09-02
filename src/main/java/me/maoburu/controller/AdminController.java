@@ -143,6 +143,7 @@ public class AdminController {
 	public String resetPassword() {
 		return "admin/reset_password";
 	}
+	
 	@RequestMapping("/resetPasswordTrue.do")
 	public String resetPasswordTrue(String originalPassword, String newPassword, 
 			String repeatPassword, HttpServletRequest request) {
@@ -177,9 +178,7 @@ public class AdminController {
 	}
 	
 	private void reGenerateSessionId(HttpServletRequest request){  
-	      
 	    HttpSession session = request.getSession();
-	      
 	    //将session信息存储到临时map
 	    Map<String,Object> tempMap = new HashMap<String,Object>();
 	    Enumeration<String> sessionNames = session.getAttributeNames();

@@ -26,19 +26,18 @@ public class ItemController {
 	@Resource
 	private ItemService itemService;
 	
-	@RequestMapping("/index")
+	@RequestMapping("/index.do")
 	public String index() {
 		return "item/index";
 	}
 	
-	@RequestMapping("/ajaxListItem")
-	public void ajaxListItem(String name, String status, String charge, String type, String pageNumber, String pageSize, HttpServletResponse response) throws IOException {
+	@RequestMapping("/ajaxListItem.do")
+	@ResponseBody
+	public Page ajaxListItem(String name, String status, String charge, String type, String pageNumber, String pageSize, HttpServletResponse response) throws IOException {
 		int pageNum = StringUtils.isblank(pageNumber)? 1 : Integer.valueOf(pageNumber);
 		int size = StringUtils.isblank(pageNumber)? 1 : Integer.valueOf(pageSize);
-		name = new String(name.getBytes("iso8859-1"),"UTF-8");
-		type = new String(type.getBytes("iso8859-1"),"UTF-8");
 		Page page = itemService.listItem(name, status, charge, type, pageNum, size);
-		response.getWriter().write(new Gson().toJson(page));
+		return page;
 	}
 	
 	@RequestMapping("/listRelateVideo.do")
