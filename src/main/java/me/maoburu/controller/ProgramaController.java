@@ -39,12 +39,13 @@ public class ProgramaController {
 	}
 	
 	@RequestMapping("/ajaxListMainPrograma.do")
-	public void ajaxListMainPrograma(String pageNumber, String pageSize, HttpServletResponse response) throws IOException {
+	@ResponseBody
+	public Page ajaxListMainPrograma(String pageNumber, String pageSize, HttpServletResponse response) throws IOException {
 		int pageNum = StringUtils.isblank(pageNumber)? 1 : Integer.valueOf(pageNumber);
 		int size = StringUtils.isblank(pageNumber)? 1 : Integer.valueOf(pageSize);
 		
 		Page page = programaService.listMainPrograma(pageNum, size);
-		response.getWriter().write(new Gson().toJson(page));
+		return page;
 	}
 	
 	@RequestMapping("/ajaxListPrograma.do")

@@ -148,11 +148,11 @@
                        		<label class="col-sm-2 control-label">状态 *：</label>
                        		<div class="col-sm-5">
                        			<div class="radio radio-info radio-inline">
-                                    <input id="status1" type="radio" value="online" name="status" th:if="${item?.status=='online'}" th:attr="checked=checked">
+                                    <input id="status1" type="radio" value="online" name="status" th:checked="${item?.status=='online'}">
                                     <label for="status1"> 上线 </label>
                                 </div>
                                 <div class="radio radio-info radio-inline">
-                                    <input id="status2" type="radio" value="offline" name="status" th:if="${item?.status!='online'}" th:attr="checked=checked">
+                                    <input id="status2" type="radio" value="offline" name="status" th:checked="${item?.status!='online'}">
                                     <label for="status2"> 下线 </label>
                                 </div>
                        		</div>
@@ -161,11 +161,11 @@
                        		<label class="col-sm-2 control-label">付费标识 *：</label>
                        		<div class="col-sm-5">
                        			<div class="radio radio-info radio-inline">
-                                    <input id="charge1" type="radio" value="Y" name="charge" th:if="${item?.charge=='Y'}" th:attr="checked=checked">
+                                    <input id="charge1" type="radio" value="Y" name="charge" th:checked="${item?.charge='Y'}">
                                     <label for="charge1"> 收费 </label>
                                 </div>
                                 <div class="radio radio-info radio-inline">
-                                    <input id="charge2" type="radio" value="N" name="charge" th:if="${item?.charge!='Y'}" th:attr="checked=checked">
+                                    <input id="charge2" type="radio" value="N" name="charge" th:checked="${item?.charge!='Y'}">
                                     <label for="charge2"> 免费 </label>
                                 </div>
                        		</div>
@@ -174,15 +174,15 @@
                        		<label class="col-sm-2 control-label">角标 *：</label>
                        		<div class="col-sm-5">
                        			<div class="radio radio-info radio-inline">
-                                    <input id="corner1" type="radio" value="" name="corner" th:if="${item?.corner == ''}" th:attr="checked=checked">
+                                    <input id="corner1" type="radio" value="" name="corner" th:checked="${item?.corner=='' || item eq null}">
                                     <label for="corner1"> 无 </label>
                                 </div>
                        			<div class="radio radio-info radio-inline">
-                                    <input id="corner2" type="radio" value="db" name="corner" th:if="${item?.corner=='db'}" th:attr="checked=checked">
+                                    <input id="corner2" type="radio" value="db" name="corner" th:checked="${item?.corner=='db'}">
                                     <label for="corner2"> 独播 </label>
                                 </div>
                                 <div class="radio radio-info radio-inline">
-                                    <input id="corner3" type="radio" value="rb" name="corner" th:if="${item?.corner=='rb'}" th:attr="checked=checked">
+                                    <input id="corner3" type="radio" value="rb" name="corner" th:checked="${item?.corner=='rb'}">
                                     <label for="corner3"> 热播 </label>
                                 </div>
                        		</div>
@@ -192,14 +192,14 @@
                        		<div id="uploader-demo" style="padding-left : 195px">
 							    <!--用来存放item-->
 							    <div id="filebox">
-							    	<div id="imageList" class="uploader-list" th:if="${item?.poster != ''}">
+							    	<div id="imageList" class="uploader-list" th:if="${item != null && item?.poster != ''}">
 							    		<div class="file-item thumbnail " style="">
 							                <img src="/uploadImg/${item.poster}"/>
 							                <input type="hidden" name="poster" value="${item.poster}"/>
 							                <div class="info operation"><i class="fa fa-trash" style="padding-right: 5px"></i></div>
 							            </div>
 							    	</div>
-						    		<div id="imagePicker" th:if="${item?.poster == ''}">
+						    		<div id="imagePicker" th:if="${item?.poster == '' || item == null}">
 						                <div id="imagePicker">选择图片</div>
 						            </div>
 								</div>

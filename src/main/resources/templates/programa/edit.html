@@ -1,7 +1,5 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@include file="../public.jsp"%>
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
 
@@ -78,7 +76,7 @@
                                <input name="name" class="form-control" type="text" value="${programa.name}" >
                            </div>
                        </div>
-                       <%--<div class="form-group">
+                       <div class="form-group">
                            <label class="col-sm-2 control-label">父栏目 *：</label>
                            <div class="col-sm-3">
                                <select name="parentId" class="form-control">
@@ -91,7 +89,7 @@
                            	   
                            </div>
                        </div>
-                       --%><div class="form-group">
+                       <div class="form-group">
                            <label class="col-sm-2 control-label" >上线时间 ：</label>
                            <div class="col-sm-4 input-group date form_datetime" data-date-format="yyyy-mm-dd hh:ii:ss" style="padding-left: 16px">
                            	  <input type="text" name="onlineTime" class="form-control" value='<fmt:formatDate pattern="yyyy-MM-dd hh:mm:ss"  value="${programa.onlineTime}" />'>

@@ -24,7 +24,11 @@ import me.maoburu.pojo.Page;
 import me.maoburu.service.AdminService;
 import me.maoburu.util.StringUtils;
 import me.maoburu.util.Utils;
-
+/**
+ * 用户管理
+ * @author xarrow
+ *
+ */
 @Controller
 @RequestMapping("/admin")
 public class AdminController {

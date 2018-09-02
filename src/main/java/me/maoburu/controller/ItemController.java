@@ -18,7 +18,12 @@ import me.maoburu.pojo.Item;
 import me.maoburu.pojo.Page;
 import me.maoburu.service.ItemService;
 import me.maoburu.util.StringUtils;
-
+/**
+ * 
+ * 节目管理
+ * @author maoburu
+ *
+ */
 @Controller
 @RequestMapping("/item")
 public class ItemController {

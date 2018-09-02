@@ -1,7 +1,5 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ include file="../public.jsp"%>
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
 
@@ -11,11 +9,11 @@
 
     <title>栏目首页</title>
 
-    <link href="../css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
-    <link href="../css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
-    <link href="../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
-    <link href="../css/animate.min.css" rel="stylesheet">
-    <link href="../css/style.min.css?v=4.0.0" rel="stylesheet">
+    <link href="/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <link href="/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="/css/animate.min.css" rel="stylesheet">
+    <link href="/css/style.min.css?v=4.0.0" rel="stylesheet">
 
 </head>
 
@@ -27,22 +25,16 @@
                     <div class="col-sm-12">
                         <h2 >一级栏目</h2>
                         <hr>
-                        <c:if test="${!empty notify}">
-                        	<div class="alert alert-success">
-                                ${notify}
-                            </div>
-                        </c:if>
-                        <div>
-                        	
+                       	<div class="alert alert-success" th:if="${notify} neq null" th:text="${notify}">
                         </div>
                         <div>
                             <div class="btn-group hidden-xs" id="toolbar">
-                                <button type="button" class="btn btn-outline btn-default" onclick="window.location.href='../programa/edit.do'">
+                                <button type="button" class="btn btn-outline btn-default" onclick="window.location.href='/programa/edit.do'">
                                     <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
                                     <span>添加栏目</span>
                                 </button>
                             </div>
-                            <table id="table1" data-height="500" data-mobile-responsive="true"/>
+                            <table id="table1" data-height="500" data-mobile-responsive="true"></table>
                         </div>
                     </div>
                 </div>
@@ -50,17 +42,16 @@
         </div>
         <!-- End Panel Other -->
     
-    <script src="../js/jquery.min.js?v=2.1.4"></script>
-    <script src="../js/bootstrap.min.js?v=3.3.5"></script>
-    <script src="../js/content.min.js?v=1.0.0"></script>
-    <script src="../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
-    <%--<script src="../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
-    --%><script src="../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="/js/jquery.min.js?v=2.1.4"></script>
+    <script src="/js/bootstrap.min.js?v=3.3.5"></script>
+    <script src="/js/content.min.js?v=1.0.0"></script>
+    <script src="/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
     <script>
         $(function(){
             $('#table1').bootstrapTable({
             	method: 'get',
-            	url: "../programa/ajaxListMainPrograma.do",
+            	url: "/programa/ajaxListMainPrograma.do",
 				striped : true,
 				cache: false,
 				pagination : true,
@@ -118,14 +109,14 @@
         
         var operateEvents = {
             'click .second_programa': function (e, value, row, index) {
-		    	window.location.href="../programa/secondPrograma.do?id=" + row.id + "&name=" + row.name;
+		    	window.location.href="/programa/secondPrograma.do?id=" + row.id + "&name=" + row.name;
 		    	
 		    },
 		    'click .list_item': function (e, value, row, index) {
-		    	window.location.href="../programa/listItem.do?id=" + row.id + "&name=" + row.name;
+		    	window.location.href="/programa/listItem.do?id=" + row.id + "&name=" + row.name;
 		    },
 		    'click .edit': function (e, value, row, index) {
-				window.location.href="../programa/edit.do?id=" + row.id;
+				window.location.href="/programa/edit.do?id=" + row.id;
 		    },
         };
         
