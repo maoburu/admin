@@ -9,11 +9,11 @@
 
     <title>二级栏目</title>
 
-    <link href="../css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
-    <link href="../css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
-    <link href="../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
-    <link href="../css/animate.min.css" rel="stylesheet">
-    <link href="../css/style.min.css?v=4.0.0" rel="stylesheet">
+    <link href="/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <link href="/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="/css/animate.min.css" rel="stylesheet">
+    <link href="/css/style.min.css?v=4.0.0" rel="stylesheet">
 
 </head>
 
@@ -25,14 +25,11 @@
                     <div class="col-sm-12">
                         <!-- Example Events -->
                         <div class="">
-                            <h2 class="col-sm-11" style="float:left;padding-left: 0">${programa.name}/二级栏目</h2>
+                            <h2 class="col-sm-11" style="float:left;padding-left: 0" th:text="${programa.name}+'/二级栏目'"></h2>
                             <button type="button" class="btn btn-primary " onclick="window.history.go(-1)">返回</button>
                             <hr>
-                            <c:if test="${!empty notify}">
-                            	<div class="alert alert-success">
-                                    ${notify}
+                            	<div class="alert alert-success" th:hidden="${notify == null}" th:text="${notify}">
                                 </div>
-                            </c:if>
                             <div class="example">
                                 <div class="btn-group hidden-xs" id="toolbar">
                                     <button type="button" class="btn btn-outline btn-default" id="layerButton">
@@ -51,18 +48,17 @@
         </div>
         <!-- End Panel Other -->
     
-    <script src="../js/jquery.min.js?v=2.1.4"></script>
-    <script src="../js/bootstrap.min.js?v=3.3.5"></script>
-    <script src="../js/content.min.js?v=1.0.0"></script>
-    <script src="../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
-    <%--<script src="../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
-    --%><script src="../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
-    <script src="../js/plugins/layer/layer.js"></script>
+    <script src="/js/jquery.min.js?v=2.1.4"></script>
+    <script src="/js/bootstrap.min.js?v=3.3.5"></script>
+    <script src="/js/content.min.js?v=1.0.0"></script>
+    <script src="/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="/js/plugins/layer/layer.js"></script>
     <script>
         $(function(){
             $('#table1').bootstrapTable({
             	method: 'get',
-            	url: "../programa/ajaxListSecondPrograma.do?id=" + ${programa.id},
+            	url: "/programa/ajaxListSecondPrograma.do?id=" + ${programa.id},
 				striped : true,
 				cache: false,
 				pagination : true,
@@ -134,7 +130,7 @@
 			          		parentId : "${programa.id}",
 			          		position:row.position,
 			        },
-			        url: '../programa/upPrograma.do',
+			        url: '/programa/upPrograma.do',
 			        success: function (data) {
 			        	if (data == -1) {
 			        		layer.msg("已经是第一个了~");
@@ -152,7 +148,7 @@
 			          		parentId : "${programa.id}",
 			          		position:row.position,
 			        },
-			        url: '../programa/downPrograma.do',
+			        url: '/programa/downPrograma.do',
 			        success: function (data) {
 			        	if (data == -1) {
 			        		layer.msg("已经是最后一个了~");
@@ -170,7 +166,7 @@
 			          		parentId : "${programa.id}",
 			          		position : row.position
 			        },
-			        url: '../programa/removeRelatePrograma.do',
+			        url: '/programa/removeRelatePrograma.do',
 			        success: function (data) {
 			        	layer.msg("删除成功");
 			            $("#table1").bootstrapTable("refresh");
@@ -178,10 +174,10 @@
 		  		});
 		    },
 		    'click .item': function (e, value, row, index) {
-		    	window.location.href="../programa/listItem.do?id=" + row.id + "&name=" + row.name;
+		    	window.location.href="/programa/listItem.do?id=" + row.id + "&name=" + row.name;
 		    },
 		    'click .edit': function (e, value, row, index) {
-				window.location.href="../programa/edit.do?id=" + row.id;
+				window.location.href="/programa/edit.do?id=" + row.id;
 		    },
             
         };
@@ -193,7 +189,7 @@
 			  maxmin: true,
 			  shadeClose: true, //点击遮罩关闭层
 			  area : ['800px' , '450px'],
-			  content: '../programa/relatePrograma.do?parentId=${programa.id}'
+			  content: '/programa/relatePrograma.do?parentId=${programa.id}'
 			});
 		});
     </script>

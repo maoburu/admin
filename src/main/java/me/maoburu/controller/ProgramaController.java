@@ -49,20 +49,17 @@ public class ProgramaController {
 	}
 	
 	@RequestMapping("/ajaxListPrograma.do")
-	public void ajaxListPrograma(String pageNumber, String pageSize, HttpServletResponse response) throws IOException {
+	@ResponseBody
+	public Page ajaxListPrograma(String pageNumber, String pageSize, HttpServletResponse response) throws IOException {
 		int pageNum = StringUtils.isblank(pageNumber)? 1 : Integer.valueOf(pageNumber);
 		int size = StringUtils.isblank(pageNumber)? 1 : Integer.valueOf(pageSize);
 		Page page = programaService.list(pageNum, size);
-		response.getWriter().write(new Gson().toJson(page));
+		return page;
 	}
 	
 	@RequestMapping("/secondPrograma.do")
 	public String secondPrograma(Programa programa, HttpServletRequest request) {
-		try {
-			programa.setName(new String(programa.getName().getBytes("iso8859-1"),"UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+		
 		request.setAttribute("programa", programa);
 		return "programa/second";
 	}
@@ -91,7 +88,6 @@ public class ProgramaController {
 	public void ajaxListItem(String id,String name, String status, String pageNumber, String pageSize, HttpServletResponse response) throws IOException {
 		int pageNum = StringUtils.isblank(pageNumber)? 1 : Integer.valueOf(pageNumber);
 		int size = StringUtils.isblank(pageNumber)? 1 : Integer.valueOf(pageSize);
-		name = new String(name.getBytes("iso8859-1"),"UTF-8");
 		Page page = programaService.listRelateItem(id, name, status, pageNum, size);
 		
 		response.getWriter().write(new Gson().toJson(page));

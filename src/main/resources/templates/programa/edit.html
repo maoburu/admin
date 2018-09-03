@@ -9,13 +9,13 @@
 
     <title>栏目编辑</title>
 
-    <link href="../css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
-    <link href="../css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
-    <link href="../css/animate.min.css" rel="stylesheet">
-    <link href="../css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
-    <link href="../css/style.min.css?v=4.0.0" rel="stylesheet">
-    <link href="../css/plugins/datapicker/bootstrap-datetimepicker.min.css" rel="stylesheet">
-	<link  href="../css/plugins/webuploader/webuploader.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <link href="/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="/css/animate.min.css" rel="stylesheet">
+    <link href="/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+    <link href="/css/style.min.css?v=4.0.0" rel="stylesheet">
+    <link href="/css/plugins/datapicker/bootstrap-datetimepicker.min.css" rel="stylesheet">
+	<link  href="/css/plugins/webuploader/webuploader.css" rel="stylesheet">
 	<style type="text/css">
 		#uploader-demo .thumbnail img {
 		    width: 100%;
@@ -67,22 +67,20 @@
                         <h2>栏目编辑</h2>
                         <hr>
                     </div>
-                    <form class="form-horizontal m-t" id="form" action="../programa/addOrUpdatePrograma.do" method="post">
-                       <input type="hidden" name="id" value="${programa.id}">
-                       <input type="hidden" name="operation" value="${operation}">
+                    <form class="form-horizontal m-t" id="form" action="/programa/addOrUpdatePrograma.do" method="post">
+                       <input type="hidden" name="id" th:value="${programa?.id}">
+                       <input type="hidden" name="operation" th:value="${operation}">
                        <div class="form-group">
                            <label class="col-sm-2 control-label">栏目名 *：</label>
                            <div class="col-sm-4">
-                               <input name="name" class="form-control" type="text" value="${programa.name}" >
+                               <input name="name" class="form-control" type="text" th:value="${programa?.name}" >
                            </div>
                        </div>
                        <div class="form-group">
                            <label class="col-sm-2 control-label">父栏目 *：</label>
                            <div class="col-sm-3">
-                               <select name="parentId" class="form-control">
-								   <c:forEach items="${programaList}" var="list">
-								   		<option value="${list.id}">${list.name}</option>
-								   </c:forEach>
+                               <select name="parentId" class="form-control" th:each="${programlist}">
+								   		<option th:value="${list?.id}" th:>${list.name}</option>
 							   </select>
                            </div>
                            <div class="col-sm-5">
@@ -125,7 +123,7 @@
 										<c:when test="${!empty programa.background}">
 									    	<div id="imageList" class="uploader-list">
 									    		<div class="file-item thumbnail " style="">
-									                <img src="../uploadImg/${programa.background}"/>
+									                <img src="/uploadImg/${programa.background}"/>
 									                <input type="hidden" name="background" value="${programa.background}"/>
 									                <div class="info operation"><i class="fa fa-trash" style="padding-right: 5px"></i></div>
 									            </div>
@@ -166,13 +164,13 @@
         </div>
     </div>
             
-    <script src="../js/jquery.min.js?v=2.1.4"></script>
-    <script src="../js/bootstrap.min.js?v=3.3.5"></script>
-    <script src="../js/plugins/validate/jquery.validate.min.js"></script>
-    <script src="../js/plugins/validate/messages_zh.min.js"></script>
-    <script src="../js/plugins/webuploader/webuploader.min.js"></script>
-    <script src="../js/plugins/datapicker/bootstrap-datetimepicker.min.js"></script>
-    <script src="../js/plugins/datapicker/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="/js/jquery.min.js?v=2.1.4"></script>
+    <script src="/js/bootstrap.min.js?v=3.3.5"></script>
+    <script src="/js/plugins/validate/jquery.validate.min.js"></script>
+    <script src="/js/plugins/validate/messages_zh.min.js"></script>
+    <script src="/js/plugins/webuploader/webuploader.min.js"></script>
+    <script src="/js/plugins/datapicker/bootstrap-datetimepicker.min.js"></script>
+    <script src="/js/plugins/datapicker/bootstrap-datetimepicker.zh-CN.js"></script>
     
    	<script>
 		//参数校验
@@ -213,8 +211,8 @@
 		function initUpload() {
 			var uploader = WebUploader.create({
 				auto : true,
-				swf: '../js/Uploader.swf',
-				server : "../programa/uploadPicture.do",
+				swf: '/js/Uploader.swf',
+				server : "/programa/uploadPicture.do",
 				formData:{
 					id : "${empty programa.id ? -1 : programa.id}",
 				},
